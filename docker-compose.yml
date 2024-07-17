@@ -6,6 +6,5 @@ services:
       - "5000:5000"
     volumes:
       - ./uploads:/app/uploads
-      - ./items.db:/app/items.db
     environment:
       - FLASK_ENV=development
