@@ -1,0 +1,23 @@
+<!-- index.html -->
+{% extends "base.html" %}
+{% block title %}Item List{% endblock %}
+{% block content %}
+    <h2>Item List</h2>
+    {% for item in items %}
+        <div class="item">
+            <h3>{{ item.description }}</h3>
+            <p>ID: {{ item.id }}</p>
+            <p>Brand: {{ item.brand }}</p>
+            <p>Model: {{ item.model }}</p>
+            {% if item.image %}
+                <img src="{{ item.image }}" alt="{{ item.description }}" style="max-width: 200px; max-height: 200px;">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+            <p>
+                <a href="{{ url_for('edit_item', item_id=item.id) }}">Edit</a> |
+                <a href="{{ url_for('delete_item', item_id=item.id) }}" onclick="return confirm('Are you sure?')">Delete</a>
+            </p>
+        </div>
+    {% endfor %}
+{% endblock %}
