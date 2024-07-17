@@ -1,20 +1,30 @@
-# Use an official Python runtime as the base image
+# Use the official Python image from the Docker Hub
 FROM python:3.9-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # Set the working directory in the container
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file into the container
+COPY requirements.txt /app/
 
-# Install the required packages
-RUN pip install --no-cache-dir flask
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Copy the rest of the application code into the container
+COPY . /app/
 
 # Create the uploads directory
 RUN mkdir -p /app/uploads
 
-# Run app.py when the container launches
+# Expose the port the app runs on
+EXPOSE 5000
+
+# Initialize the database
+RUN python -c "from app import init_db; init_db()"
+
+# Command to run the Flask application
 CMD ["python", "app.py"]
