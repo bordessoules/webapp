@@ -101,6 +101,6 @@ Contributions are welcome! Please follow these steps to contribute:
     Push to the branch (git push origin feature-branch)
     Create a new Pull Request
 
-##License
+## License
 
 This project is licensed under Apache License - see the LICENSE file for details or at 'https://www.apache.org/licenses/LICENSE-2.0'.
