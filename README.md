@@ -36,7 +36,7 @@ This web application is built using Flask and provides a simple interface to man
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/webapp.git
+    git clone[ https://github.com/bordessoules/webapp]
     cd webapp
     ```
 
