@@ -23,8 +23,6 @@ RUN mkdir -p /app/uploads
 # Expose the port the app runs on
 EXPOSE 5000
 
-# Initialize the database
-RUN python -c "from app import init_db; init_db()"
 
 # Command to run the Flask application
 CMD ["python", "app.py"]

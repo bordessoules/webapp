@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Add New Item{% endblock %}
+{% block content %}
+<h1>Add New Item</h1>
+
+<form id="addItemForm" action="{{ url_for('main.add_item') }}" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id" min="1" value="{{ suggested_id }}">
+    </div>
+    <div>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" >
+    </div>
+
+    <div>
+        <label for="tags">Tags (comma-separated):</label>
+        <input type="text" id="tags" name="tags">
+    </div>
+
+    <div id="imageInputs">
+        <label for="images">Add Image:</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple>
+    </div>
+
+    <div id="imagePreview"></div>
+
+    <button type="submit">Add Item</button>
+</form>
+
+<script>
+let uploadedFiles = []; // Array to store uploaded files
+
+function handleFileSelect(event) {
+    const files = event.target.files; // FileList object
+    const imagePreview = document.getElementById('imagePreview');
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        // Only process image files
+        if (!file.type.startsWith('image/')){ 
+            console.error('File is not an image:', file.name);
+            continue;
+        }
+
+        // Add file to uploadedFiles array
+        uploadedFiles.push(file);
+
+        const img = document.createElement('img');
+        img.classList.add('preview-image');
+        img.file = file;
+        img.style.maxWidth = '200px';
+        img.style.maxHeight = '200px';
+        img.style.margin = '5px';
+
+        const reader = new FileReader();
+        reader.onload = (function(aImg) { 
+            return function(e) { 
+                aImg.src = e.target.result; 
+            }; 
+        })(img);
+
+        reader.readAsDataURL(file);
+        imagePreview.appendChild(img);
+    }
+
+    // Clear the file input to allow selecting the same file again
+    event.target.value = '';
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+
+    // Remove any existing 'images' fields
+    formData.delete('images');
+
+    // Add each uploaded file to the formData
+    uploadedFiles.forEach((file, index) => {
+        formData.append('images', file, file.name);  // Include the file name
+    });
+
+    // Log formData contents (for debugging)
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    // Send the form data to the server
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Redirect to the index page or show a success message
+        window.location.href = '/';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Show an error message to the user
+        alert('An error occurred while adding the item. Please try again.');
+    });
+}
+
+// Add event listeners
+document.getElementById('images').addEventListener('change', handleFileSelect);
+document.getElementById('addItemForm').addEventListener('submit', handleSubmit);
+</script>
+{% endblock %}

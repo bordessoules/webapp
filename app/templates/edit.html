@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block title %}Edit Item{% endblock %}
+{% block content %}
+<h1>Edit Item</h1>
+
+<form id="editItemForm" action="{{ url_for('main.edit_item', item_id=item.id) }}" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" value="{{ item.description }}" required>
+    </div>
+
+    <div>
+        <label for="tags">Tags (comma-separated):</label>
+        <input type="text" id="tags" name="tags" value="{{ item.tags|join(', ') }}">
+    </div>
+
+    <div id="existingImages">
+        <h3>Current Images:</h3>
+        {% for image in item.images %}
+            <div class="image-container">
+                <img src="{{ url_for('main.uploaded_file', filename=image.filename) }}" alt="Item image" style="max-width: 200px; max-height: 200px; margin: 5px;">
+                <button type="button" class="remove-image" data-filename="{{ image.filename }}">Remove</button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="imageInputs">
+        <label for="images">Add New Images:</label>
+        <input type="file" id="images" name="images" accept="image/*" multiple>
+    </div>
+
+    <div id="imagePreview"></div>
+
+    <button type="submit">Update Item</button>
+</form>
+
+<script>
+let uploadedFiles = []; // Array to store new uploaded files
+let removedImages = []; // Array to store filenames of images to be removed
+
+function handleFileSelect(event) {
+    const files = event.target.files; // FileList object
+    const imagePreview = document.getElementById('imagePreview');
+    
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        
+        if (!file.type.startsWith('image/')){ 
+            console.error('File is not an image:', file.name);
+            continue;
+        }
+
+        uploadedFiles.push(file);
+
+        const img = document.createElement('img');
+        img.classList.add('preview-image');
+        img.file = file;
+        img.style.maxWidth = '200px';
+        img.style.maxHeight = '200px';
+        img.style.margin = '5px';
+
+        const reader = new FileReader();
+        reader.onload = (function(aImg) { 
+            return function(e) { 
+                aImg.src = e.target.result; 
+            }; 
+        })(img);
+
+        reader.readAsDataURL(file);
+        imagePreview.appendChild(img);
+    }
+
+    event.target.value = '';
+}
+
+function handleRemoveExistingImage(event) {
+    if (event.target.classList.contains('remove-image')) {
+        const filename = event.target.getAttribute('data-filename');
+        removedImages.push(filename);
+        event.target.closest('.image-container').remove();
+    }
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+
+    // Remove any existing 'images' fields
+    formData.delete('images');
+
+    // Add each new uploaded file to the formData
+    uploadedFiles.forEach((file, index) => {
+        formData.append('new_images', file, file.name);
+    });
+
+    // Add removed image filenames to formData
+    removedImages.forEach((filename) => {
+        formData.append('remove_images', filename);
+    });
+
+    // Log formData contents (for debugging)
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    // Send the form data to the server
+    fetch(form.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Redirect to the index page or show a success message
+        window.location.href = '/';
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        // Show an error message to the user
+        alert('An error occurred while updating the item. Please try again.');
+    });
+}
+
+// Add event listeners
+document.getElementById('images').addEventListener('change', handleFileSelect);
+document.getElementById('existingImages').addEventListener('click', handleRemoveExistingImage);
+document.getElementById('editItemForm').addEventListener('submit', handleSubmit);
+</script>
+{% endblock %}
