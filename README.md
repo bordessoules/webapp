@@ -26,8 +26,8 @@ This Flask-based web application provides a simple and intuitive interface for m
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/flask-item-management.git
-   cd flask-item-management
+   git clone https://github.com/bordessoules/webapp.git
+   cd webapp
    ```
 
 2. Create and activate a virtual environment:
@@ -58,8 +58,13 @@ This Flask-based web application provides a simple and intuitive interface for m
    ```
    flask run
    ```
-
 7. Open a web browser and navigate to `http://localhost:5000`
+
+## With docker
+   ```
+   docker-compose up --build
+   ```
+Open a web browser and navigate to `http://localhost:5000`
 
 ## Usage
 
@@ -94,12 +99,10 @@ flask-item-management/
 │       ├── add.html
 │       └── edit.html
 │
-├── migrations/
-├── venv/
 ├── .env
 ├── .gitignore
 ├── requirements.txt
-├── run.py
+├── app.py
 └── README.md
 ```
 
