@@ -1,97 +1,108 @@
-# WebApp
+# Flask Item Management System
 
-A simple Flask web application for managing products, including features for adding, editing, listing, and deleting products with QR codes and images.
+## Overview
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Docker Usage](#docker-usage)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Introduction
-
-This web application is built using Flask and provides a simple interface to manage products. Users can add new products with QR codes, edit existing ones, list all products, and delete products. The application uses SQLite for data storage and supports image uploads.
+This Flask-based web application provides a simple and intuitive interface for managing items with descriptions, tags, and associated images. It allows users to create, read, update, and delete items, as well as add and remove tags and images for each item.
 
 ## Features
 
-- Add new products with details and images
-- Edit existing products
-- List all products
-- Delete products
-- Image upload functionality
+- Create new items with descriptions, tags, and images
+- View a list of all items
+- Edit existing items (update description, add/remove tags, add/remove images)
+- Delete items
+- Automatic ID assignment with option for manual entry
+- Image upload and management
+- Tag management for easy item categorization
 
-## Prerequisites
+## Technologies Used
 
-- Python 3.9+
-- Docker (optional, for containerized deployment)
+- Python 3.8+
+- Flask 2.1.0
+- SQLAlchemy (via Flask-SQLAlchemy)
+- HTML/CSS
+- JavaScript (for frontend interactivity)
 
-## Installation
+## Setup and Installation
 
-1. **Clone the repository:**
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/flask-item-management.git
+   cd flask-item-management
+   ```
 
-    ```bash
-    git clone[ https://github.com/bordessoules/webapp]
-    cd webapp
-    ```
+2. Create and activate a virtual environment:
+   ```
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
 
-2. **Create a virtual environment:**
+3. Install the required packages:
+   ```
+   pip install -r requirements.txt
+   ```
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+4. Set up environment variables:
+   Create a `.env` file in the root directory and add the following:
+   ```
+   FLASK_APP=run.py
+   FLASK_ENV=development
+   SECRET_KEY=your_secret_key_here
+   ```
 
-3. **Install dependencies:**
+5. Initialize the database:
+   ```
+   flask db upgrade
+   ```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+6. Run the application:
+   ```
+   flask run
+   ```
 
-4. **Run the application:**
-
-    ```bash
-    python app.py
-    ```
+7. Open a web browser and navigate to `http://localhost:5000`
 
 ## Usage
 
-Once the application is running, you can access it at `http://localhost:5000`. You will see the following routes available:
+### Adding an Item
+1. Click on "Add New Item" from the homepage.
+2. Fill in the description, add tags (comma-separated), and upload images.
+3. Optionally, you can specify a custom ID or let the system auto-assign one.
+4. Click "Add Item" to save.
 
-- `/` - Home page
-- `/api/list` - List all products
-- `/api/add` - Add a new product
-- `/api/edit<int:id>` - Edit a product
-- `/api/delete-<int:qr_code>` - Delete a product
+### Editing an Item
+1. From the item list, click on "Edit" next to the item you want to modify.
+2. Update the description, add/remove tags, or add/remove images as needed.
+3. Click "Update Item" to save changes.
 
-## Docker Usage
+### Deleting an Item
+1. From the item list, click on "Delete" next to the item you want to remove.
+2. Confirm the deletion when prompted.
 
-To run the application using Docker:
+## File Structure
 
-1. **Build and run the Docker container:**
-
-    ```bash
-    docker-compose up --build
-    ```
-
-2. Access the application at `http://localhost:5000`.
-
-## Project Structure
-
-```plaintext
-/your-project-directory
-├── app.py               # Main application file
-├── Dockerfile           # Docker configuration
-├── requirements.txt     # Python dependencies
-├── docker-compose.yml   # Docker Compose configuration
-├── uploads/             # Directory for uploaded images
-└── templates/           # HTML templates for Flask
 ```
+flask-item-management/
+│
+├── app/
+│   ├── __init__.py
+│   ├── models.py
+│   ├── routes.py
+│   ├── helpers.py
+│   └── templates/
+│       ├── base.html
+│       ├── index.html
+│       ├── add.html
+│       └── edit.html
+│
+├── migrations/
+├── venv/
+├── .env
+├── .gitignore
+├── requirements.txt
+├── run.py
+└── README.md
+```
+
 ## Contributing
 
 Contributions are welcome! Please follow these steps to contribute:
