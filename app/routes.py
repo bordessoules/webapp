@@ -1,9 +1,9 @@
 # routes.py
-from .helpers import generate_unique_filename, allowed_file
-from flask import Blueprint, jsonify, render_template, request, redirect, flash, current_app, send_from_directory
+from flask import Blueprint, render_template, request, redirect, flash, current_app, jsonify, send_from_directory
 import os
 from app import db
 from app.models import Item, Image, Tag
+from .helpers import generate_unique_filename, allowed_file
 from sqlalchemy.exc import IntegrityError
 
 main = Blueprint('main', __name__)
