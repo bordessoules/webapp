@@ -6,7 +6,7 @@
 <form id="editItemForm" action="{{ url_for('main.edit_item', item_id=item.id) }}" method="post" enctype="multipart/form-data">
     <div>
         <label for="description">Description:</label>
-        <input type="text" id="description" name="description" value="{{ item.description }}" required>
+        <input type="text" id="description" name="description" value="{{ item.description }}" >
     </div>
 
     <div>
